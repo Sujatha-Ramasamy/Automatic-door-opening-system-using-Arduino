@@ -1,0 +1,42 @@
+﻿const int trigPin = 9; // Trigger pin of the ultrasonic sensor
+const int echoPin = 10; // Echo pin of the ultrasonic sensor
+const int openAngle = 90; // Angle to open the door
+const int closeAngle = 0; // Angle to close the door
+long duration;
+int distance;
+
+void setup() {
+  doorServo.attach(8); // Attach the servo to pin 8
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  doorServo.write(closeAngle); // Close the door initially
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Measure distance using the ultrasonic sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.034 / 2;
+
+  if (distance < 20) { // Adjust this threshold based on your needs
+    openDoor();
+  } else {
+    closeDoor();
+  }
+}
+
+void openDoor() {
+  doorServo.write(openAngle); // Open the door
+  delay(2000); // Adjust the delay as needed
+}
+
+void closeDoor() {
+  doorServo.write(closeAngle); // Close the door
+  delay(2000); // Adjust the delay as needed
+}
+
